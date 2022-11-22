@@ -6,3 +6,11 @@ class AppColor {
   static const Color backgroundColor = Color(0xFF9AB3F5);
   static const Color chartColor = Color(0xFFB9FFFC);
 }
+
+TextStyle get primaryTextStyle => const TextStyle(
+      fontWeight: FontWeight.bold,
+    );
+
+TextStyle get secondaryTextStyle => const TextStyle(
+      fontWeight: FontWeight.bold,
+    );

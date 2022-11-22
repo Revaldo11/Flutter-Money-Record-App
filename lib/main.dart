@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:money_record/config/app_color.dart';
 import 'package:money_record/config/session.dart';
 import 'package:money_record/model/user_model.dart';
@@ -7,7 +8,8 @@ import 'components/page/auth/login_page.dart';
 import 'components/page/home_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding();
+  initializeDateFormatting('id_ID').then((value) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Demo Apps',
       theme: ThemeData.light().copyWith(
         primaryColor: AppColor.primaryColor,
         colorScheme: const ColorScheme.light(
