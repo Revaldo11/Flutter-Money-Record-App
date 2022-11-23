@@ -1,24 +1,38 @@
-// ignore_for_file: prefer_const_constructors, unused_field
+import 'dart:math';
 
+import 'package:d_info/d_info.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
 import 'package:money_record/config/app_asset.dart';
 import 'package:money_record/config/app_color.dart';
+import 'package:money_record/source/source_user.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final formkey = GlobalKey<FormState>();
+  final controllerEmail = TextEditingController();
+  final controllerPassword = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  login() async {
+    if (formKey.currentState!.validate()) {
+      bool success = await SourceUser.login(
+        controllerEmail.text,
+        controllerPassword.text,
+      );
 
-  login() {
-    if (formkey.currentState!.validate()) {}
+      if (success) {
+        DInfo.dialogSuccess('Berhasil Login');
+        DInfo.closeDialog();
+      } else {
+        DInfo.dialogError('Gagal Login');
+        DInfo.closeDialog();
+      }
+    }
   }
 
   @override
@@ -37,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   DView.nothing(),
                   Form(
-                    key: formkey,
+                    key: formKey,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: Column(
@@ -45,9 +59,9 @@ class _LoginPageState extends State<LoginPage> {
                           Image.asset(AppAssets.logo),
                           DView.spaceHeight(40),
                           TextFormField(
-                            controller: _emailController,
+                            controller: controllerEmail,
                             validator: (value) =>
-                                value == '' ? 'Email Cant be Empty' : null,
+                                value == '' ? 'Jangan kosong' : null,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             style: const TextStyle(color: Colors.white),
@@ -58,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(30),
                                 borderSide: BorderSide.none,
                               ),
-                              hintText: 'Email',
+                              hintText: 'email',
                               isDense: true,
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 20,
@@ -68,9 +82,9 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           DView.spaceHeight(),
                           TextFormField(
-                            controller: _passwordController,
+                            controller: controllerPassword,
                             validator: (value) =>
-                                value == '' ? 'Password Cant be Empty' : null,
+                                value == '' ? 'Jangan kosong' : null,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             obscureText: true,
@@ -82,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(30),
                                 borderSide: BorderSide.none,
                               ),
-                              hintText: 'Password',
+                              hintText: 'password',
                               isDense: true,
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 20,
@@ -95,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                             color: AppColor.primaryColor,
                             borderRadius: BorderRadius.circular(30),
                             child: InkWell(
-                              onTap: (() => login()),
+                              onTap: () => login(),
                               borderRadius: BorderRadius.circular(30),
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(

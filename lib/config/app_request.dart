@@ -8,7 +8,6 @@ class AppRequest {
     try {
       http.Response response = await http.get(Uri.parse(url), headers: headers);
       DMethod.printTitle('try - $url', response.body);
-
       Map responseBody = jsonDecode(response.body);
       return responseBody;
     } catch (e) {
@@ -26,7 +25,6 @@ class AppRequest {
         headers: headers,
       );
       DMethod.printTitle('try - $url', response.body);
-
       Map responseBody = jsonDecode(response.body);
       return responseBody;
     } catch (e) {
