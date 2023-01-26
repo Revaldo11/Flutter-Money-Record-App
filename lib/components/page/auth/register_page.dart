@@ -1,41 +1,30 @@
-import 'package:d_info/d_info.dart';
 import 'package:d_view/d_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:money_record/components/page/auth/register_page.dart';
-import '../../../config/app_asset.dart';
-import '../../../config/app_color.dart';
-import '../../../source/source_user.dart';
-import '../home_page.dart';
+import 'package:money_record/components/page/auth/login_page.dart';
+import 'package:money_record/config/app_asset.dart';
+import 'package:money_record/config/app_color.dart';
+import 'package:money_record/source/source_user.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
+  final controllerName = TextEditingController();
   final controllerEmail = TextEditingController();
   final controllerPassword = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  login() async {
+  register() async {
     if (formKey.currentState!.validate()) {
-      bool success = await SourceUser.login(
+      bool success = await SourceUser.register(
+        controllerName.text,
         controllerEmail.text,
         controllerPassword.text,
       );
-      if (success) {
-        DInfo.dialogSuccess('Berhasil Login');
-        DInfo.closeDialog(actionAfterClose: () {
-          Get.off(() => const HomePage());
-        });
-      } else {
-        DInfo.dialogError('Gagal Login');
-        DInfo.closeDialog();
-      }
     }
   }
 
@@ -62,6 +51,29 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           Image.asset(AppAsset.logo),
                           DView.spaceHeight(40),
+                          TextFormField(
+                            controller: controllerName,
+                            validator: (value) =>
+                                value == '' ? 'Jangan kosong' : null,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              fillColor: AppColor.primaryColor.withOpacity(0.5),
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide.none,
+                              ),
+                              hintText: 'Name',
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 16,
+                              ),
+                            ),
+                          ),
+                          DView.spaceHeight(),
                           TextFormField(
                             controller: controllerEmail,
                             validator: (value) =>
@@ -113,13 +125,13 @@ class _LoginPageState extends State<LoginPage> {
                             color: AppColor.primaryColor,
                             borderRadius: BorderRadius.circular(30),
                             child: InkWell(
-                              onTap: () => login(),
+                              onTap: () => register(),
                               borderRadius: BorderRadius.circular(30),
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 40, vertical: 16),
                                 child: Text(
-                                  'LOGIN',
+                                  'REGISTER',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -138,15 +150,15 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          'Belum punya akun? ',
+                          'Sudah punya akun? ',
                           style: TextStyle(fontSize: 16),
                         ),
                         GestureDetector(
                           onTap: () {
-                            Get.to(() => const RegisterPage());
+                            Get.to(() => const LoginPage());
                           },
                           child: const Text(
-                            'Register',
+                            'Login',
                             style: TextStyle(
                               color: AppColor.primaryColor,
                               fontWeight: FontWeight.bold,
