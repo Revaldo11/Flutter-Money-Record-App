@@ -240,24 +240,33 @@ class _HomePageState extends State<HomePage> {
   AspectRatio weekly() {
     return AspectRatio(
       aspectRatio: 16 / 9,
-      child: DChartBar(
-        data: const [
-          {
-            'id': 'Bar',
-            'data': [
-              {'domain': '1000', 'measure': 1},
-              {'domain': '2021', 'measure': 4},
-              {'domain': '2022', 'measure': 6},
-              {'domain': '2023', 'measure': 0.3},
+      child: Obx(
+        () {
+          return DChartBar(
+            data: [
+              {
+                'id': 'Bar',
+                'data': List.generate(
+                  7,
+                  (index) {
+                    return {
+                      'domain': homeController.weekText()[index],
+                      'measure': homeController.week[index],
+                    };
+                  },
+                ),
+              },
             ],
-          },
-        ],
-        domainLabelPaddingToAxisLine: 8,
-        axisLineTick: 2,
-        axisLineColor: AppColor.primaryColor,
-        measureLabelPaddingToAxisLine: 16,
-        barColor: (barData, index, id) => Colors.amber,
-        showBarValue: true,
+            domainLabelPaddingToAxisLine: 16,
+            axisLineTick: 2,
+            axisLinePointTick: 2,
+            axisLinePointWidth: 10,
+            axisLineColor: AppColor.primaryColor,
+            measureLabelPaddingToAxisLine: 16,
+            barColor: (barData, index, id) => AppColor.chartColor,
+            showBarValue: true,
+          );
+        },
       ),
     );
   }
