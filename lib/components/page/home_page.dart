@@ -227,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                 ),
                 DView.spaceHeight(),
-                monthly()
+                monthly(context),
               ],
             ),
           ),
@@ -272,8 +272,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // monthly chart
-
-  Row monthly() {
+  Row monthly(BuildContext context) {
     return Row(
       children: [
         SizedBox(
@@ -282,28 +281,84 @@ class _HomePageState extends State<HomePage> {
           child: Stack(
             children: [
               DChartPie(
-                data: const [
-                  {'domain': 'Flutter', 'measure': 28},
-                  {'domain': 'React Native', 'measure': 27},
-                  {'domain': 'Ionic', 'measure': 20},
-                  {'domain': 'Cordova', 'measure': 15},
+                data: [
+                  {'domain': 'Income', 'measure': homeController.monthIncome},
+                  {'domain': 'Outcome', 'measure': homeController.monthOutcome},
+                  if (homeController.monthIncome == 0 &&
+                      homeController.monthOutcome == 0)
+                    {'domain': 'Nol', 'measure': 1}
                 ],
-                fillColor: (pieData, index) => Colors.purple,
+                fillColor: (pieData, index) {
+                  switch (pieData['domain']) {
+                    case 'income':
+                      return AppColor.primaryColor;
+                    case 'outcome':
+                      return AppColor.chartColor;
+                    default:
+                      return AppColor.backgroundColor.withOpacity(0.5);
+                  }
+                },
                 donutWidth: 30,
-                labelColor: Colors.white,
+                labelColor: Colors.transparent,
+                showLabelLine: false,
               ),
               Center(
-                child: Text(
-                  '60%',
-                  style: Theme.of(context).textTheme.headline4!.copyWith(
-                        color: AppColor.primaryColor,
-                      ),
-                ),
+                child: Obx(() {
+                  return Text(
+                    '${homeController.percentIncome}%',
+                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                          color: AppColor.primaryColor,
+                        ),
+                  );
+                }),
               ),
             ],
           ),
         ),
-        Column(),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 16.0,
+                  height: 16.0,
+                  color: AppColor.primaryColor,
+                ),
+                DView.spaceWidth(8),
+                const Text("Pemasukan"),
+              ],
+            ),
+            DView.spaceHeight(8),
+            Row(
+              children: [
+                Container(
+                  width: 16.0,
+                  height: 16.0,
+                  color: AppColor.secondaryColor,
+                ),
+                DView.spaceWidth(8),
+                const Text("Pengeluaran"),
+              ],
+            ),
+            DView.spaceHeight(20),
+            Obx(() {
+              return Text(homeController.monthPercent);
+            }),
+            DView.spaceHeight(10),
+            const Text('Atau setara:'),
+            Obx(() {
+              return Text(
+                AppFormat.currency(homeController.differentMonth.toString()),
+                style: const TextStyle(
+                  color: AppColor.primaryColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            }),
+          ],
+        ),
       ],
     );
   }
